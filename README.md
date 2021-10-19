@@ -1,6 +1,7 @@
 # Repositorio de material para el curso Taller de Experimentos en Línea
 
 *Profesora: Denise Laroze, USACH*
+
 Colaboradores: Francisco Villarroel y Milton Inostroza
 
 Este repositorio incorpora material de ejemplo de experimentos en línea para utilizar en cursos de formación experimental
