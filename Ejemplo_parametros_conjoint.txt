@@ -1,0 +1,18 @@
+1; Ubicación; Norte de Chile
+1; Ubicación; Sur de Chile
+1; Ubicación; Extranjero
+2; Precio; Alto
+2; Precio; Medio
+2; Precio; Desconocido
+3; Acceso; En auto
+3; Acceso; En auto y locomoción colectiva
+3; Solo por mar
+4; Avión
+5; Habitación disponible; Doble
+5; Habitación disponible; King
+5; Habitación disponible; Single
+6; Referencias Booking; 4.8/5.0 estrellas
+6; Referencias Booking; 4.1/5.0 estrellas
+6; Referencias Booking; 3.0/5.0 estrellas
+
+
