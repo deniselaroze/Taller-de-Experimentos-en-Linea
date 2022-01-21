@@ -119,7 +119,7 @@ df <- data.frame(Attribute=as.character(),Level=as.character(),Candidate=as.char
 
 for (attribute in c("Información de prensa", "Información corporativa", "Twit de uno de tus contactos de redes sociales:", "Twit de reconocido influencer" )) {
   level <- factor(ifelse(master$I.2.1 == attribute,as.character(master$I.2.1.1),
-                         ifelse(master$I.1.2 == attribute,as.character(master$I.2.1.2),
+                         ifelse(master$I.2.2 == attribute,as.character(master$I.2.1.2),
                                 ifelse(master$I.2.3 == attribute,as.character(master$I.1.1.3), as.character(master$I.2.1.4)))))
   df <- rbind(df,data.frame(Attribute = attribute, Level = level, Candidate = 1))
 }
