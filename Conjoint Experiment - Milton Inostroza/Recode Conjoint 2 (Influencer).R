@@ -1,11 +1,40 @@
-setwd("/Users/miltoninos/Desktop/Modulo Proyecto Tesis/Codigos Conjoint/Experimento/Resultados")
 
-df<-read.csv("/Users/miltoninos/Desktop/Modulo Proyecto Tesis/Codigos Conjoint/Experimento/Resultados/base_CMI2_nativo.csv",sep=";",head=T)
+##############################################
+### Codigo de muestra de manejo de datos
+### Autor Milton Inostroza
+### 2021
+##############################################
 
-save(df, file ="/Users/miltoninos/Desktop/Modulo Proyecto Tesis/Codigos Conjoint/Experimento/Resultados/base_CMI2_nativo_enbruto.Rdata")
+
+library(plyr)
+library(dplyr)
+library(stargazer)
+library(nnet)
+library(ggplot2)
+library(stringi)
+library(clusterSEs)
+library(xtable)
+library(psych)
+library(rms)
+library(FindIt)
+library(data.table)
+library(sandwich)
+library(lmtest)
+library(multiwayvcov)
+library(mfx)
+library(margins)
 
 
-ej<-read.Rdata("/Users/miltoninos/Desktop/Modulo Proyecto Tesis/Codigos Conjoint/Experimento/Resultados/conjoint1.Rdata")
+#setwd("/Users/miltoninos/Desktop/Modulo Proyecto Tesis/Codigos Conjoint/Experimento/Resultados")
+
+df<-read.csv("base_C2MI_muestra.csv",sep=";",head=T)
+
+#base_C2MI_muestra.csv
+
+save(df, file ="base_CMI2_nativo_enbruto.Rdata")
+
+
+#ej<-read.Rdata("conjoint1.Rdata")
 
 
 
@@ -73,9 +102,6 @@ universidad_select_prestigio <- ifelse((master$X1_Prestigio == "universidad X" &
 universidad_Xpref<-master$X1_Q_NivelPres_UX
 universidad_Zpref<-master$X1_Q_NivelPres_UZ
 
-
-
-
 hombre<-master$Hombre
 edad<-master$PD1
 Nativo_D<-master$Nativo_D
@@ -84,7 +110,7 @@ nivel_estudios<-master$PD3
 tipo_institución<-master$PD3_2
 id<-master$ResponseId
 
-conjoint2a <- data.frame(id, prensa, corporativa, twit_contacto, twit_influencer, universidad, universidad_select_reputacion, universidad_select_confianza, universidad_select_prestigio, universidad_Xpref, universidad_Zpref, hombre, edad, Nativo_D, nivel_estudios, área_estudios, tipo_institución)
+conjoint1a <- data.frame(id, prensa, corporativa, twit_contacto, twit_influencer, universidad, universidad_select_reputacion, universidad_select_confianza, universidad_select_prestigio, universidad_Xpref, universidad_Zpref, hombre, edad, Nativo_D, nivel_estudios, área_estudios, tipo_institución)
 
 
 
@@ -92,16 +118,16 @@ conjoint2a <- data.frame(id, prensa, corporativa, twit_contacto, twit_influencer
 df <- data.frame(Attribute=as.character(),Level=as.character(),Candidate=as.character())
 
 for (attribute in c("Información de prensa", "Información corporativa", "Twit de uno de tus contactos de redes sociales:", "Twit de reconocido influencer" )) {
-  level <- factor(ifelse(master$I.1.1 == attribute,as.character(master$I.1.1.1),
-                         ifelse(master$I.1.2 == attribute,as.character(master$I.1.1.2),
-                                ifelse(master$I.1.3 == attribute,as.character(master$I.1.1.3), as.character(master$I.1.1.4)))))
+  level <- factor(ifelse(master$I.2.1 == attribute,as.character(master$I.2.1.1),
+                         ifelse(master$I.1.2 == attribute,as.character(master$I.2.1.2),
+                                ifelse(master$I.2.3 == attribute,as.character(master$I.1.1.3), as.character(master$I.2.1.4)))))
   df <- rbind(df,data.frame(Attribute = attribute, Level = level, Candidate = 1))
 }
 
 for (attribute in c("Información de prensa", "Información corporativa", "Twit de uno de tus contactos de redes sociales:", "Twit de reconocido influencer" )) {
-  level <- factor(ifelse(master$I.1.1 == attribute,as.character(master$I.1.2.1),
-                         ifelse(master$I.1.2 == attribute,as.character(master$I.1.2.2),
-                                ifelse(master$I.1.3 == attribute,as.character(master$I.1.2.3),as.character(master$I.1.2.4)))))
+  level <- factor(ifelse(master$I.2.1 == attribute,as.character(master$I.2.2.1),
+                         ifelse(master$I.2.2 == attribute,as.character(master$I.2.2.2),
+                                ifelse(master$I.2.3 == attribute,as.character(master$I.2.2.3),as.character(master$I.2.2.4)))))
   df <- rbind(df,data.frame(Attribute = attribute, Level = level, Candidate = 2))
 }
 
@@ -127,23 +153,23 @@ nivel_estudios<-master$PD3
 tipo_institución<-master$PD3_2
 id<-master$ResponseId
 
-conjoint2b <- data.frame(id, prensa, corporativa, twit_contacto, twit_influencer, universidad, universidad_select_reputacion, universidad_select_confianza, universidad_select_prestigio, universidad_Xpref, universidad_Zpref, hombre, edad, Nativo_D, nivel_estudios, área_estudios, tipo_institución)
+conjoint1b <- data.frame(id, prensa, corporativa, twit_contacto, twit_influencer, universidad, universidad_select_reputacion, universidad_select_confianza, universidad_select_prestigio, universidad_Xpref, universidad_Zpref, hombre, edad, Nativo_D, nivel_estudios, área_estudios, tipo_institución)
 
 
 ##CJ1c
 df <- data.frame(Attribute=as.character(),Level=as.character(),Candidate=as.character())
 
 for (attribute in c("Información de prensa", "Información corporativa", "Twit de uno de tus contactos de redes sociales:", "Twit de reconocido influencer" )) {
-  level <- factor(ifelse(master$I.1.1 == attribute,as.character(master$I.1.1.1),
-                         ifelse(master$I.1.2 == attribute,as.character(master$I.1.1.2),
-                                ifelse(master$I.1.3 == attribute,as.character(master$I.1.1.3), as.character(master$I.1.1.4)))))
+  level <- factor(ifelse(master$I.3.1 == attribute,as.character(master$I.3.1.1),
+                         ifelse(master$I.3.2 == attribute,as.character(master$I.3.1.2),
+                                ifelse(master$I.3.3 == attribute,as.character(master$I.3.1.3), as.character(master$I.3.1.4)))))
   df <- rbind(df,data.frame(Attribute = attribute, Level = level, Candidate = 1))
 }
 
 for (attribute in c("Información de prensa", "Información corporativa", "Twit de uno de tus contactos de redes sociales:", "Twit de reconocido influencer" )) {
-  level <- factor(ifelse(master$I.1.1 == attribute,as.character(master$I.1.2.1),
-                         ifelse(master$I.1.2 == attribute,as.character(master$I.1.2.2),
-                                ifelse(master$I.1.3 == attribute,as.character(master$I.1.2.3),as.character(master$I.1.2.4)))))
+  level <- factor(ifelse(master$I.3.1 == attribute,as.character(master$I.3.2.1),
+                         ifelse(master$I.3.2 == attribute,as.character(master$I.3.2.2),
+                                ifelse(master$I.3.3 == attribute,as.character(master$I.3.2.3),as.character(master$I.3.2.4)))))
   df <- rbind(df,data.frame(Attribute = attribute, Level = level, Candidate = 2))
 }
 
@@ -169,7 +195,7 @@ nivel_estudios<-master$PD3
 tipo_institución<-master$PD3_2
 id<-master$ResponseId
 
-conjoint2c <- data.frame(id, prensa, corporativa, twit_contacto, twit_influencer, universidad, universidad_select_reputacion, universidad_select_confianza, universidad_select_prestigio, universidad_Xpref, universidad_Zpref, hombre, edad, Nativo_D, nivel_estudios, área_estudios, tipo_institución)
+conjoint1c <- data.frame(id, prensa, corporativa, twit_contacto, twit_influencer, universidad, universidad_select_reputacion, universidad_select_confianza, universidad_select_prestigio, universidad_Xpref, universidad_Zpref, hombre, edad, Nativo_D, nivel_estudios, área_estudios, tipo_institución)
 
 
 
@@ -179,16 +205,16 @@ conjoint2c <- data.frame(id, prensa, corporativa, twit_contacto, twit_influencer
 df <- data.frame(Attribute=as.character(),Level=as.character(),Candidate=as.character())
 
 for (attribute in c("Información de prensa", "Información corporativa", "Twit de uno de tus contactos de redes sociales:", "Twit de reconocido influencer" )) {
-  level <- factor(ifelse(master$I.1.1 == attribute,as.character(master$I.1.1.1),
-                         ifelse(master$I.1.2 == attribute,as.character(master$I.1.1.2),
-                                ifelse(master$I.1.3 == attribute,as.character(master$I.1.1.3), as.character(master$I.1.1.4)))))
+  level <- factor(ifelse(master$I.4.1 == attribute,as.character(master$I.4.1.1),
+                         ifelse(master$I.4.2 == attribute,as.character(master$I.4.1.2),
+                                ifelse(master$I.4.3 == attribute,as.character(master$I.4.1.3), as.character(master$I.4.1.4)))))
   df <- rbind(df,data.frame(Attribute = attribute, Level = level, Candidate = 1))
 }
 
 for (attribute in c("Información de prensa", "Información corporativa", "Twit de uno de tus contactos de redes sociales:", "Twit de reconocido influencer" )) {
-  level <- factor(ifelse(master$I.1.1 == attribute,as.character(master$I.1.2.1),
-                         ifelse(master$I.1.2 == attribute,as.character(master$I.1.2.2),
-                                ifelse(master$I.1.3 == attribute,as.character(master$I.1.2.3),as.character(master$I.1.2.4)))))
+  level <- factor(ifelse(master$I.4.1 == attribute,as.character(master$I.4.2.1),
+                         ifelse(master$I.4.2 == attribute,as.character(master$I.4.2.2),
+                                ifelse(master$I.4.3 == attribute,as.character(master$I.4.2.3),as.character(master$I.4.2.4)))))
   df <- rbind(df,data.frame(Attribute = attribute, Level = level, Candidate = 2))
 }
 
@@ -214,7 +240,7 @@ nivel_estudios<-master$PD3
 tipo_institución<-master$PD3_2
 id<-master$ResponseId
 
-conjoint2d <- data.frame(id, prensa, corporativa, twit_contacto, twit_influencer, universidad, universidad_select_reputacion, universidad_select_confianza, universidad_select_prestigio, universidad_Xpref, universidad_Zpref, hombre, edad, Nativo_D, nivel_estudios, área_estudios, tipo_institución)
+conjoint1d <- data.frame(id, prensa, corporativa, twit_contacto, twit_influencer, universidad, universidad_select_reputacion, universidad_select_confianza, universidad_select_prestigio, universidad_Xpref, universidad_Zpref, hombre, edad, Nativo_D, nivel_estudios, área_estudios, tipo_institución)
 
 
 
@@ -223,16 +249,16 @@ conjoint2d <- data.frame(id, prensa, corporativa, twit_contacto, twit_influencer
 df <- data.frame(Attribute=as.character(),Level=as.character(),Candidate=as.character())
 
 for (attribute in c("Información de prensa", "Información corporativa", "Twit de uno de tus contactos de redes sociales:", "Twit de reconocido influencer" )) {
-  level <- factor(ifelse(master$I.1.1 == attribute,as.character(master$I.1.1.1),
-                         ifelse(master$I.1.2 == attribute,as.character(master$I.1.1.2),
-                                ifelse(master$I.1.3 == attribute,as.character(master$I.1.1.3), as.character(master$I.1.1.4)))))
+  level <- factor(ifelse(master$I.5.1 == attribute,as.character(master$I.5.1.1),
+                         ifelse(master$I.5.2 == attribute,as.character(master$I.5.1.2),
+                                ifelse(master$I.5.3 == attribute,as.character(master$I.5.1.3), as.character(master$I.5.1.4)))))
   df <- rbind(df,data.frame(Attribute = attribute, Level = level, Candidate = 1))
 }
 
 for (attribute in c("Información de prensa", "Información corporativa", "Twit de uno de tus contactos de redes sociales:", "Twit de reconocido influencer" )) {
-  level <- factor(ifelse(master$I.1.1 == attribute,as.character(master$I.1.2.1),
-                         ifelse(master$I.1.2 == attribute,as.character(master$I.1.2.2),
-                                ifelse(master$I.1.3 == attribute,as.character(master$I.1.2.3),as.character(master$I.1.2.4)))))
+  level <- factor(ifelse(master$I.5.1 == attribute,as.character(master$I.5.2.1),
+                         ifelse(master$I.5.2 == attribute,as.character(master$I.5.2.2),
+                                ifelse(master$I.5.3 == attribute,as.character(master$I.5.2.3),as.character(master$I.5.2.4)))))
   df <- rbind(df,data.frame(Attribute = attribute, Level = level, Candidate = 2))
 }
 
@@ -258,15 +284,15 @@ nivel_estudios<-master$PD3
 tipo_institución<-master$PD3_2
 id<-master$ResponseId
 
-conjoint2e <- data.frame(id, prensa, corporativa, twit_contacto, twit_influencer, universidad, universidad_select_reputacion, universidad_select_confianza, universidad_select_prestigio, universidad_Xpref, universidad_Zpref, hombre, edad, Nativo_D, nivel_estudios, área_estudios, tipo_institución)
+conjoint1e <- data.frame(id, prensa, corporativa, twit_contacto, twit_influencer, universidad, universidad_select_reputacion, universidad_select_confianza, universidad_select_prestigio, universidad_Xpref, universidad_Zpref, hombre, edad, Nativo_D, nivel_estudios, área_estudios, tipo_institución)
 
 
 #### Gen one DF
-conjoint2N <- rbind(conjoint2a,conjoint2b,conjoint2c,conjoint2d,conjoint2e)
+conjoint1N <- rbind(conjoint1a,conjoint1b,conjoint1c,conjoint1d,conjoint1e)
 
 
-rm(conjoint2a,conjoint2b,conjoint2c,conjoint2d,conjoint2e)
+rm(conjoint1a,conjoint1b,conjoint1c,conjoint1d,conjoint1e)
 
-save(conjoint2N, file ="/Users/miltoninos/Desktop/Modulo Proyecto Tesis/Codigos Conjoint/Experimento/Resultados/conjoint2N.Rdata")
+save(conjoint1N, file ="conjoint1N.Rdata")
 
 

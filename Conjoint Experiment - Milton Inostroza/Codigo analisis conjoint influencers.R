@@ -31,12 +31,13 @@ library(margins)
 
 rm(list = ls())
 
-setwd("/Users/miltoninos/Desktop/Modulo Proyecto Tesis/Codigos Conjoint/Experimento/Resultados/final")
+#setwd("/Users/miltoninos/Desktop/Modulo Proyecto Tesis/Codigos Conjoint/Experimento/Resultados/final")
 
 #source("conjoint_recode.R")
 
-load("/Users/miltoninos/Desktop/Modulo Proyecto Tesis/Codigos Conjoint/Experimento/Resultados/final/conjoint2B_Influencers.Rdata")
-conjoint2 <- droplevels(conjoint2)  
+load("conjoint1N.Rdata")
+
+conjoint2 <- droplevels(conjoint1N)  
 
 conjoint <- rbind(conjoint2)
 
@@ -148,9 +149,12 @@ xtable(mcor)
 ### Main model estimations
 ##############################################
 
+mylogit <- glm(universidad_select_prestigio ~ prensa + corporativa + twit_contacto + twit_influencer, data = conjoint, family = "binomial")
+summary(mylogit)
+
 
 ########### Model estimations brand selection
-model1 <- lrm(universidad_select_reputacion~ prensa+corporativa+ twit_contacto + twit_influencer,data=conjoint,  x=T, y=T)
+model1 <- lrm(universidad_select_reputacion~ prensa+corporativa ,data=conjoint,  x=T, y=T)
 model2 <- lrm(universidad_select_confianza ~ prensa+corporativa+ twit_contacto + twit_influencer,data=conjoint,  x=T, y=T)
 model3 <- lrm(universidad_select_prestigio ~ prensa+corporativa+ twit_contacto + twit_influencer,data=conjoint,  x=T, y=T)
 
@@ -161,7 +165,9 @@ model3.cl<-bootcov(model3,cluster=conjoint$id)
 
 
 
-stargazer(model1.cl, model2.cl, model3.cl, type="html", out="models_cl_C2.html")
+stargazer(model1.cl, model2.cl, model3.cl)
+
+, type="html", out="models_cl_C2.html")
 
 
 modeli <- lm(universidad_select_reputacion~ prensa+corporativa+ twit_contacto + twit_influencer,data=conjoint)
